@@ -1,0 +1,218 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import GuideComposer from "../components/guide-composer.tsx";
+
+const guides = (await getCollection("guides"))
+  .map((guide) => ({
+    id: guide.id,
+    title: guide.data.title,
+    label: guide.data.title,
+  }))
+  .sort((leftGuide, rightGuide) =>
+    leftGuide.title.localeCompare(rightGuide.title),
+  );
+
+const seoDescription =
+  "Build off the shelve AGENTS.md with curated engineering guides. Select, reorder, and export markdown instructions for coding agents with direct curl routes.";
+const seoKeywords = [
+  "AGENTS.md",
+  "AI coding agent",
+  "prompt engineering",
+  "developer guides",
+  "markdown generator",
+  "cursor rules",
+  "codex",
+];
+const siteUrl = import.meta.env.SITE;
+const tickerCopies = 6;
+
+const pageSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "AGENTS.md",
+    url: siteUrl ?? "/",
+    description: seoDescription,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "AGENTS.md",
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Web",
+    description: seoDescription,
+    url: siteUrl ?? "/",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  },
+];
+---
+
+<Layout
+  title="AGENTS.md | Off the Shelve Agent Instructions"
+  description={seoDescription}
+  canonicalPath="/"
+  keywords={seoKeywords}
+  schema={pageSchema}
+>
+  <div
+    class="min-h-screen flex flex-col overflow-x-hidden bg-black text-white font-[family-name:var(--font-geist)]"
+  >
+    <h1 class="sr-only">AGENTS.md for AI Coding Agent Instructions</h1>
+
+    <!-- Topbar -->
+    <nav
+      class="shrink-0 h-9 border-b border-white/[0.07] flex items-center px-6 justify-between"
+    >
+      <span
+        class="font-[family-name:var(--font-geist-mono)] text-[10px] tracking-[0.13em] uppercase text-[#777]"
+        >AGENTS.md</span
+      >
+      <div class="flex items-center gap-6">
+        <span
+          class="font-[family-name:var(--font-geist-mono)] text-[10px] tracking-[0.13em] uppercase text-[#444]"
+          >{guides.length} guides</span
+        >
+        <a
+          href="https://github.com/betarixm/AGENTS.md"
+          class="font-[family-name:var(--font-geist-mono)] text-[10px] tracking-[0.13em] uppercase text-[#555] uline-hover"
+          >GitHub ↗</a
+        >
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="shrink-0 border-b border-white/[0.07] px-6 pt-10 pb-8">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex items-start justify-between gap-6 mb-5">
+          <h2 class="hero-title">AGENTS.md</h2>
+          <div class="shrink-0 text-right mt-1 hidden sm:block">
+            <p
+              class="font-[family-name:var(--font-geist-mono)] text-[10px] tracking-[0.13em] uppercase text-[#555]"
+            >
+              betarixm® (OSS / 2025)
+            </p>
+          </div>
+        </div>
+        <p
+          class="font-[family-name:var(--font-geist-mono)] text-[11px] tracking-[0.08em] uppercase text-[#666]"
+        >
+          Off the Shelve · Compose · Export &mdash; AI agent instructions at speed.
+        </p>
+      </div>
+    </header>
+
+    <!-- Ticker -->
+    <div
+      class="shrink-0 border-b border-white/[0.07] overflow-hidden relative ticker-wrap"
+    >
+      <div
+        class="ticker-track flex items-center whitespace-nowrap"
+        aria-hidden="true"
+      >
+        {
+          Array.from({ length: tickerCopies }).map((_, i) => (
+            <span
+              class="inline-flex items-center gap-5 px-7 py-2.5 font-[family-name:var(--font-geist-mono)] text-[10px] tracking-[0.13em] uppercase text-[#777] select-none"
+              aria-hidden={i > 0 ? "true" : undefined}
+            >
+              <span class="text-[#aaa]">AGENTS.md</span>
+              <span class="text-[#444]">·</span>
+              <span>Off the Shelve Agent Setup</span>
+              <span class="text-[#444]">·</span>
+              <span class="text-[#aaa]">Curated Engineering Guides</span>
+              <span class="text-[#444]">·</span>
+              <span>{guides.length} guides</span>
+              <span class="text-[#444]">·</span>
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Workspace -->
+    <div class="flex-1 min-h-0 px-6 py-5">
+      <div class="max-w-5xl mx-auto h-full">
+        <GuideComposer guides={guides} client:load />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* ── Hero ── */
+  .hero-title {
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    color: #fff;
+  }
+
+  /* ── Underline hover ── */
+  .uline-hover {
+    position: relative;
+    transition: color 0.15s;
+  }
+  .uline-hover::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .uline-hover:hover {
+    color: #ccc;
+  }
+  .uline-hover:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ── Ticker ── */
+  .ticker-wrap::before,
+  .ticker-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .ticker-wrap::before {
+    left: 0;
+    background: linear-gradient(90deg, #000 30%, transparent);
+  }
+  .ticker-wrap::after {
+    right: 0;
+    background: linear-gradient(270deg, #000 30%, transparent);
+  }
+
+  .ticker-track {
+    width: max-content;
+    animation: ticker-scroll 32s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-wrap:hover .ticker-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-scroll {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-16.6667%, 0, 0);
+    }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import "../styles/global.css";
+import { Font } from 'astro:assets';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  imagePath?: string;
+  keywords?: string[];
+  noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title = "AGENTS.md",
+  description = "Build off the shelve AGENTS.md from curated coding guides. Mix, reorder, and fetch markdown instructions with one command.",
+  canonicalPath,
+  imagePath = "/favicon.svg",
+  keywords = [],
+  noindex = false,
+  schema,
+} = Astro.props;
+
+const siteName = "AGENTS.md";
+const configuredSite = import.meta.env.SITE ? new URL(import.meta.env.SITE) : null;
+const canonicalUrl = configuredSite
+  ? new URL(canonicalPath ?? Astro.url.pathname, configuredSite).toString()
+  : canonicalPath ?? Astro.url.pathname;
+const imageUrl = configuredSite
+  ? new URL(imagePath, configuredSite).toString()
+  : imagePath;
+const robotsValue = noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+const schemaItems = (Array.isArray(schema) ? schema : schema ? [schema] : []).map((item) =>
+  JSON.stringify(item),
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta name="description" content={description} />
+    {keywords.length > 0 && <meta name="keywords" content={keywords.join(", ")} />}
+    <meta name="robots" content={robotsValue} />
+    <meta name="googlebot" content={robotsValue} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="author" content={siteName} />
+    <meta name="application-name" content={siteName} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    {
+      schemaItems.map((schemaItem) => (
+        <script type="application/ld+json" set:html={schemaItem} />
+      ))
+    }
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+  }
+</style>
