@@ -1,46 +1,68 @@
-# Astro Starter Kit: Basics
+# AGENTS.md
 
-```sh
-bun create astro@latest -- --template basics
+Off-the-shelf `AGENTS.md` composer for AI coding agents.  
+Select guides, reorder them, and export markdown instructions through route-based output.
+
+## Features
+
+- Curated guide library (`src/data/guides/*.md`)
+- Drag-and-drop guide ordering
+- Dynamic export route:
+  - `/AGENTS.md` (all guides)
+  - `/:key/AGENTS.md` (selected guides)
+- Copy-ready `curl` command generation
+- Built with Astro + React + Tailwind CSS v4 + Motion
+
+## Getting Started
+
+```bash
+bun install
+bun dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open `http://localhost:4321`.
 
-## 🚀 Project Structure
+## Scripts
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+bun dev      # start dev server
+bun build    # production build
+bun preview  # preview build
+bun astro    # astro cli
+```
+
+## Project Structure
 
 ```text
-/
+.
+├── src/
+│   ├── components/
+│   │   └── guide-composer.tsx
+│   ├── data/
+│   │   └── guides/
+│   │       ├── clean-code.md
+│   │       ├── javascript.md
+│   │       ├── next.js.md
+│   │       ├── react.md
+│   │       └── typescript.md
+│   ├── lib/
+│   │   ├── compose-markdown.ts
+│   │   └── guide-route-combinations.ts
+│   └── pages/
+│       ├── index.astro
+│       ├── AGENTS.md.ts
+│       └── [key]/AGENTS.md.ts
 ├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## How It Works
 
-## 🧞 Commands
+1. Guides are loaded from Astro content collections.
+2. Users select and reorder guides in the composer UI.
+3. The app builds a route path and provides a `curl` command.
+4. Markdown is composed on demand via `AGENTS.md` routes.
 
-All commands are run from the root of the project, from a terminal:
+## License
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+MIT
